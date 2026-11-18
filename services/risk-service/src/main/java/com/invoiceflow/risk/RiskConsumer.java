@@ -35,7 +35,7 @@ public class RiskConsumer {
         String currency = p.path("currency").asText("INR");
         boolean eligible = amount.signum() > 0 && amount.compareTo(new BigDecimal("5000000")) <= 0 && "INR".equals(currency);
         int score = eligible ? 85 : 25;
-        String reason = eligible ? "POC rules passed: accepted invoice, positive amount, INR, within demo limit" : "POC rules failed: check amount, currency or acceptance";
+        String reason = eligible ? "rules passed: accepted invoice, positive amount, INR, within demo limit" : "POC rules failed: check amount, currency or acceptance";
         jdbc.update("INSERT INTO risk_decisions(invoice_id,eligible,score,reason) VALUES(?,?,?,?)", id, eligible, score, reason);
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("invoiceId", id);
