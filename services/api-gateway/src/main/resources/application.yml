@@ -1,0 +1,55 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: risk-service
+          uri: ${RISK_SERVICE_URL:http://localhost:8082}
+          predicates: [ Path=/api/risk/** ]
+          filters: [ StripPrefix=1 ]
+        - id: financing-service
+          uri: ${FINANCING_SERVICE_URL:http://localhost:8083}
+          predicates: [ Path=/api/financing/** ]
+          filters: [ StripPrefix=1 ]
+        - id: payment-service
+          uri: ${PAYMENT_SERVICE_URL:http://localhost:8084}
+          predicates: [ Path=/api/payments/** ]
+          filters: [ StripPrefix=1 ]
+        - id: reconciliation-service
+          uri: ${RECONCILIATION_SERVICE_URL:http://localhost:8085}
+          predicates: [ Path=/api/reconciliations/** ]
+          filters: [ StripPrefix=1 ]
+        - id: spark-analytics-service
+          uri: ${SPARK_ANALYTICS_URL:http://localhost:8090}
+          predicates: [ Path=/api/spark/** ]
+          filters: [ StripPrefix=2 ]
+        - id: invoice-service
+          uri: ${INVOICE_SERVICE_URL:http://localhost:8081}
+          predicates: [ Path=/api/invoices/** ]
+          filters: [ StripPrefix=1 ]
+        - id: party-service
+          uri: ${PARTY_SERVICE_URL:http://localhost:8086}
+          predicates: [ Path=/api/parties/** ]
+          filters: [ StripPrefix=1 ]
+        - id: dashboard-service
+          uri: ${READ_MODEL_SERVICE_URL:http://localhost:8088}
+          predicates: [ Path=/api/dashboard/** ]
+          filters: [ StripPrefix=1 ]
+        - id: identity-service
+          uri: ${IDENTITY_SERVICE_URL:http://localhost:8087}
+          predicates: [ Path=/api/auth/** ]
+          filters: [ StripPrefix=1 ]
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
